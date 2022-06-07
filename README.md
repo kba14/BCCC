@@ -1,8 +1,6 @@
 # Típusok és kartéziánusan zárt kategóriák
 
-## Category
-
-**Kategória definíciója**
+## Kategória definíciója
 
 ````coq
 Class Category := cat_mk {
