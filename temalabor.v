@@ -81,20 +81,6 @@ Class CartClosed := {
 }.
 
 
-Class EndoFunctor {C : Category} := {
-
-EF_obj : @Obj C -> @Obj C;
-
-EF_mor : forall {x y}, (Hom x y) -> (Hom (EF_obj x) (EF_obj y));
-
-EF_id_ax : forall {x}, EF_mor (Id x) = Id (EF_obj x);
-
-EF_comp_ax : forall {x y z : @Obj C} {f g},
-      @EF_mor x z (f ∘ g) = (@EF_mor y z f) ∘ (@EF_mor x y g)
-}.
-
-
-
 Notation "⊤" := (Terminal_obj) (at level 40, no
 associativity) : type_scope.
 
@@ -108,8 +94,8 @@ type_scope.
 Notation "x 'e↑' y" := (Exp_obj x y) (at level 80, right associativity) :
 type_scope.
 
-
 Context {CC : CartClosed}.
+
 
 Theorem unique_prod : forall x y z (f1 : x → y) (f2 : x → z) (g : x → Prod_obj y z),
     ((pr_1 ∘ g) = f1) /\ ((pr_2 ∘ g) = f2) ->  Prod_mor f1 f2 = g.
