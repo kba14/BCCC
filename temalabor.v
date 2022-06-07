@@ -171,72 +171,6 @@ rewrite H61.
 auto.
 Qed.
 
-
-Definition isomorph x y := exists (i : x → y) (j : y → x), i ∘ j = Id y /\ j ∘ i = Id x.
-
-Notation "x '≅' y" := (isomorph x y) (at level 40, left associativity) :
-type_scope.
-
-Theorem Egy_szer_x_egyenlő_x : forall X, ⊤ × X ≅ X.
-Proof.
-intros.
-unfold isomorph.
-exists (@pr_2 CC Terminal_obj X).
-exists ((@Terminal_mor CC X) ∏ (Id X)).
-split.
-apply prod_ax.
-assert (H: (Terminal_mor ∏ Id X) ∘ (@pr_2 CC Terminal_obj X) = 
-(Terminal_mor ∘ (@pr_2 CC Terminal_obj X)) ∏ (Id X ∘ (@pr_2 CC Terminal_obj X))).
-enough (K: (Terminal_mor ∘ (@pr_2 CC Terminal_obj X)) ∏ (Id X ∘ (@pr_2 CC Terminal_obj X)) = (Terminal_mor ∏ Id X) ∘ (@pr_2 CC Terminal_obj X)).
-congruence.
-apply compos_prod.
-rewrite H.
-assert (K:Id X ∘ (@pr_2 CC Terminal_obj X)=pr_2).
-apply id_2.
-rewrite K.
-assert (L1:Terminal_mor ∘ (@pr_2 CC Terminal_obj X) = @Terminal_mor CC (⊤ × X)).
-apply unique_terminal.
-assert (L2:@pr_1 CC Terminal_obj X = @Terminal_mor CC (⊤ × X)).
-apply unique_terminal.
-rewrite <- L1 in L2.
-assert (L: Terminal_mor ∘ (@pr_2 CC Terminal_obj X) = @pr_1 CC Terminal_obj X ).
-congruence.
-rewrite L.
-assert (M1:(@pr_1 CC Terminal_obj X) ∘ Id (⊤ × X) = @pr_1 CC Terminal_obj X ).
-apply id_1.
-assert (M1':(@pr_1 CC Terminal_obj X = (@pr_1 CC Terminal_obj X) ∘ Id (⊤ × X))).
-congruence.
-rewrite M1'.
-assert (M2:(@pr_2 CC Terminal_obj X) ∘ Id (⊤ × X) = @pr_2 CC Terminal_obj X ).
-apply id_1.
-assert (M2':(@pr_2 CC Terminal_obj X = (@pr_2 CC Terminal_obj X) ∘ Id (⊤ × X))).
-congruence.
-rewrite M2'.
-apply prod_eq.
-Qed.
-
-Definition inbijection x y := exists (f: x -> y), (forall x y, f x = f y -> x = y) /\ (forall y : y, exists x, f x = y).
-
-Definition inverse {x y} (f: x -> y) g := forall a, g (f a) = a.
-
-Theorem Currying : forall x y z, inbijection (Hom (z × x) y) (Hom z (y e↑ x)).
-Proof.
-intros.
-unfold inbijection.
-exists (fun f => Lam f).
-split.
-intros.
-assert (H1: Exp_app ∘ (Prod_mor ((Lam x0) ∘ pr_1) ((Id x) ∘ pr_2)) = x0).
-apply exp_ax.
-assert (H2: Exp_app ∘ (Prod_mor ((Lam y0) ∘ pr_1) ((Id x) ∘ pr_2)) = y0).
-apply exp_ax.
-rewrite <- H in H2.
-congruence.
-intros.
-exists (Exp_app ∘ (Prod_mor (y0 ∘ pr_1) ((Id x) ∘ pr_2))).
-apply unique_exp.
-Qed.
-
 Theorem distributive_law : forall (x y z w : Obj) (f: Hom (Prod_obj z x) y) (g: Hom w z), (Lam f) ∘ g = Lam (f ∘ ((g ∘ pr_1) ∏ ((Id x) ∘ pr_2))).
 Proof.
 intros.
@@ -256,17 +190,6 @@ apply unique_exp with (h := (Lam f) ∘ g).
 congruence.
 Qed.
 
-Definition Singleton (H : uHom) := exists x : H, forall y : H, y = x.
-
-Theorem initialHom : forall Y, Singleton (Hom Initial_obj Y).
-Proof.
-intros.
-unfold Singleton.
-exists Initial_mor.
-intros.
-apply unique_initial.
-Qed.
-
 Theorem prlemma : forall (x y : Obj), Prod_mor pr_1 pr_2 = Id (x × y).
 Proof.
 intros.
@@ -274,6 +197,26 @@ apply unique_prod.
 split.
 apply id_1.
 apply id_1.
+Qed.
+
+Definition inbijection x y := exists (f: x -> y), (forall x y, f x = f y -> x = y) /\ (forall y : y, exists x, f x = y).
+
+Theorem Currying : forall x y z, inbijection (Hom (z × x) y) (Hom z (y e↑ x)).
+Proof.
+intros.
+unfold inbijection.
+exists (fun f => Lam f).
+split.
+intros.
+assert (H1: Exp_app ∘ (Prod_mor ((Lam x0) ∘ pr_1) ((Id x) ∘ pr_2)) = x0).
+apply exp_ax.
+assert (H2: Exp_app ∘ (Prod_mor ((Lam y0) ∘ pr_1) ((Id x) ∘ pr_2)) = y0).
+apply exp_ax.
+rewrite <- H in H2.
+congruence.
+intros.
+exists (Exp_app ∘ (Prod_mor (y0 ∘ pr_1) ((Id x) ∘ pr_2))).
+apply unique_exp.
 Qed.
 
 Theorem homlemma : forall (x y z : Obj), inbijection (Hom (x × y) z) (Hom (y × x) z).
@@ -342,6 +285,17 @@ rewrite I.
 apply id_1 with (f := y0).
 Qed.
 
+Definition Singleton (H : uHom) := exists x : H, forall y : H, y = x.
+
+Theorem initialHom : forall Y, Singleton (Hom Initial_obj Y).
+Proof.
+intros.
+unfold Singleton.
+exists Initial_mor.
+intros.
+apply unique_initial.
+Qed.
+
 Theorem inbij_singl : forall (x y : uHom), ((inbijection x y) /\ Singleton y) -> Singleton x.
 Proof.
 intros.
@@ -364,7 +318,6 @@ auto.
 specialize (H11 y0 x0).
 auto.
 Qed.
-
 
 Theorem singletonlemma_1 : forall x, Singleton (Hom (Prod_obj (Exp_obj x Initial_obj) Initial_obj) x).
 Proof.
@@ -406,6 +359,10 @@ apply B1.
 apply S1.
 Qed.
 
+Definition isomorph x y := exists (i : x → y) (j : y → x), i ∘ j = Id y /\ j ∘ i = Id x.
+
+Notation "x '≅' y" := (isomorph x y) (at level 40, left associativity) :
+type_scope.
 
 Theorem Nullad_x_egyenlő_egy : forall X, (X e↑ 〇) ≅ ⊤.
 Proof.
