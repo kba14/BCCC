@@ -22,7 +22,6 @@ Class Category := cat_mk {
         (Compose f (Compose g h) ) = (Compose (Compose f g) h);
 
   id_1 : forall x y (f : (Hom x y)), (Compose f (Id x)) = f ;
-  id_11 : forall x y (f : (Hom x y)), f = (Compose f (Id x)) ;
 
   id_2 : forall x y (f : (Hom x y)), (Compose (Id y) f) = f ;
 
