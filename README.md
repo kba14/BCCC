@@ -105,6 +105,18 @@ type_scope.
 Context {CC : CartClosed}.
 ````
 
+## id_11
+
+````coq
+Theorem id_11 : forall x y (f : (Hom x y)), f = (Compose f (Id x)).
+Proof.
+intros.
+assert (H: f ∘ Id x = f).
+apply id_1.
+congruence.
+Qed.
+````
+
 ## unique_prod
 
 ````coq
