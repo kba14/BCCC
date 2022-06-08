@@ -46,3 +46,29 @@ rewrite <- H1; rewrite <- H2.
 apply prod_eq.
 Qed.
 ````
+
+## compos_prod
+
+````coq
+Theorem compos_prod : forall x y z w (f : w → y ) (g : w → z ) (h : x → w),
+  (f ∘ h) ∏ (g ∘ h) = ( f ∏ g ) ∘ h.
+Proof.
+intros.
+apply unique_prod.
+split.
+assert (H:pr_1 ∘ (f ∏ g ∘ h) = pr_1 ∘ (f ∏ g) ∘ h).
+apply assoc.
+rewrite H.
+assert (K:pr_1 ∘ (f ∏ g)=f).
+apply prod_ax.
+rewrite K.
+auto.
+assert (H: pr_2 ∘ ((f ∏ g) ∘ h) = pr_2 ∘ (f ∏ g) ∘ h).
+apply assoc.
+rewrite H.
+assert (K:pr_2 ∘ (f ∏ g)=g).
+apply prod_ax.
+rewrite K.
+auto.
+Qed.
+````
