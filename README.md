@@ -34,6 +34,77 @@ Notation "f ∘ g" := (Compose f g) (at level 40, left associativity) :
 type_scope.
 ````
 
+## Kartézánusan zárt kategória definíciója kiegészítve az iniciális objektummal
+
+````coq
+Context {C : Category}.
+
+Class CartClosed := {
+
+(* terminal *)
+
+  Terminal_obj : Obj;
+
+  Terminal_mor : forall {x}, x → Terminal_obj;
+ 
+  unique_terminal : forall {x} (f : x → Terminal_obj), f = Terminal_mor;
+
+(* initial *)
+
+  Initial_obj : Obj;
+
+  Initial_mor : forall {x}, Initial_obj → x;
+
+  unique_initial : forall {x} (f : Initial_obj → x), f = Initial_mor;
+
+(* szorzat *)
+
+  Prod_obj : Obj -> Obj -> Obj;
+
+  Prod_mor : forall {x y z} (f:x → y) (g:x → z), x → Prod_obj y z;
+
+  pr_1 {x y} : (Prod_obj x y) → x;
+  pr_2 {x y} : (Prod_obj x y) → y;
+
+  prod_ax : forall {x y z} (f : x → y) (g : x → z), 
+    (pr_1 ∘ (Prod_mor f g) = f) /\ (pr_2 ∘ (Prod_mor f g) = g);
+    
+  prod_eq : forall {x y z} (g : x → Prod_obj y z),
+    Prod_mor (pr_1 ∘ g) (pr_2 ∘ g) = g;
+
+(* exponenciális *)
+
+  Exp_obj : Obj -> Obj -> Obj;
+
+  Exp_app : forall {y z}, (Prod_obj (Exp_obj z y) y) → z;
+
+  Lam : forall {x y z} (g : (Prod_obj x y) → z), x → (Exp_obj z y);
+
+  exp_ax : forall {x y z} (g : (Prod_obj x y) → z), 
+    Exp_app ∘ (Prod_mor ((Lam g) ∘ pr_1) ((Id y) ∘ pr_2)) = g;
+  
+  unique_exp : forall {x y z} (h : x → Exp_obj z y),
+    Lam (Exp_app ∘ (Prod_mor (h ∘ pr_1) ((Id y) ∘ pr_2))) = h
+
+}.
+
+
+Notation "⊤" := (Terminal_obj) (at level 40, no
+associativity) : type_scope.
+
+Notation "〇" := (Initial_obj) (at level 40, no associativity) : type_scope.
+
+Notation "f '∏' g" := (Prod_mor f g) (at level 40, no associativity) : type_scope.
+
+Notation "x × y" := (Prod_obj x y) (at level 40, left associativity) :
+type_scope. 
+
+Notation "x 'e↑' y" := (Exp_obj x y) (at level 80, right associativity) :
+type_scope.
+
+Context {CC : CartClosed}.
+````
+
 ## unique_prod
 
 ````coq
@@ -140,7 +211,7 @@ apply id_1.
 Qed.
 ````
 
-## Curyying
+## Currying
 
 ````coq
 Definition inbijection x y := exists (f: x -> y), (forall x y, f x = f y -> x = y) /\ (forall y : y, exists x, f x = y).
