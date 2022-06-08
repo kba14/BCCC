@@ -34,7 +34,7 @@ Notation "f ∘ g" := (Compose f g) (at level 40, left associativity) :
 type_scope.
 ````
 
-## Kartézánusan zárt kategória definíciója kiegészítve az iniciális objektummal
+## Kartéziánusan zárt kategória definíciója kiegészítve az iniciális objektummal
 
 ````coq
 Context {C : Category}.
