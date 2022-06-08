@@ -17,7 +17,6 @@ Class Category := cat_mk {
         (Compose f (Compose g h) ) = (Compose (Compose f g) h);
 
   id_1 : forall x y (f : (Hom x y)), (Compose f (Id x)) = f ;
-  id_11 : forall x y (f : (Hom x y)), f = (Compose f (Id x)) ;
 
   id_2 : forall x y (f : (Hom x y)), (Compose (Id y) f) = f ;
 
@@ -96,6 +95,13 @@ type_scope.
 
 Context {CC : CartClosed}.
 
+Theorem id_11 : forall x y (f : (Hom x y)), f = (Compose f (Id x)).
+Proof.
+intros.
+assert (H: f ∘ Id x = f).
+apply id_1.
+congruence.
+Qed.
 
 Theorem unique_prod : forall x y z (f1 : x → y) (f2 : x → z) (g : x → Prod_obj y z),
     ((pr_1 ∘ g) = f1) /\ ((pr_2 ∘ g) = f2) ->  Prod_mor f1 f2 = g.
