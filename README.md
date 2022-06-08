@@ -407,7 +407,7 @@ apply S1.
 Qed.
 ````
 
-## Nullad_x_egyenlő_egy
+## Nullad_x_egyenlo_egy
 
 ````coq
 Definition isomorph x y := exists (i : x → y) (j : y → x), i ∘ j = Id y /\ j ∘ i = Id x.
@@ -415,7 +415,7 @@ Definition isomorph x y := exists (i : x → y) (j : y → x), i ∘ j = Id y /\
 Notation "x '≅' y" := (isomorph x y) (at level 40, left associativity) :
 type_scope.
 
-Theorem Nullad_x_egyenlő_egy : forall X, (X e↑ 〇) ≅ ⊤.
+Theorem Nullad_x_egyenlo_egy : forall X, (X e↑ 〇) ≅ ⊤.
 Proof.
 intros.
 unfold isomorph.
